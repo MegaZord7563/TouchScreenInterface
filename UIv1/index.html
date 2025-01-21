@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reefscape Touchscreen Interface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+        .reef-container, .levels-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .button {
+            width: 80px;
+            height: 80px;
+            font-size: 24px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .reef-button {
+            background-color: #6200ea;
+            color: white;
+        }
+        .level-button {
+            background-color: #ff5722;
+            color: white;
+        }
+        .button:hover {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <h1>Reefscape Interface</h1>
+    <h2>Select a Reef Position</h2>
+    <div class="reef-container">
+        <button class="button reef-button" onclick="selectReef('A')">A</button>
+        <button class="button reef-button" onclick="selectReef('B')">B</button>
+        <button class="button reef-button" onclick="selectReef('C')">C</button>
+        <button class="button reef-button" onclick="selectReef('D')">D</button>
+        <button class="button reef-button" onclick="selectReef('E')">E</button>
+        <button class="button reef-button" onclick="selectReef('F')">F</button>
+        <button class="button reef-button" onclick="selectReef('G')">G</button>
+        <button class="button reef-button" onclick="selectReef('H')">H</button>
+        <button class="button reef-button" onclick="selectReef('I')">I</button>
+        <button class="button reef-button" onclick="selectReef('J')">J</button>
+        <button class="button reef-button" onclick="selectReef('K')">K</button>
+        <button class="button reef-button" onclick="selectReef('L')">L</button>
+    </div>
+    <h2>Select a Scoring Level</h2>
+    <div class="levels-container">
+        <button class="button level-button" onclick="selectLevel('L1')">L1</button>
+        <button class="button level-button" onclick="selectLevel('L2')">L2</button>
+        <button class="button level-button" onclick="selectLevel('L3')">L3</button>
+        <button class="button level-button" onclick="selectLevel('L4')">L4</button>
+    </div>
+    <script>
+        function selectReef(position) {
+            alert('Reef position ' + position + ' selected!');
+        }
+        function selectLevel(level) {
+            alert('Scoring level ' + level + ' selected!');
+        }
+    </script>
+</body>
+</html>
