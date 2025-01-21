@@ -1,3 +1,4 @@
+<!---->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,69 +9,81 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            background-color: #f0f0f0;
+            /*background-color: #18141c;*/
+            background-image: url('images/background.png');
         }
-        .reef-container, .levels-container {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 20px;
+        .interface {
+            font-size: 0;
+        }
+        .reef-container {
+            position: relative;
+            align-self: flex-start;
+            width: 400px;
+            height: 400px;
+            margin: 50px auto;
+            background: url('reef_hexagon.png') no-repeat center;
+            background-size: contain;
+            display: inline-block;
+        }        
+        #reef-position {
+            background-image: url('images/reef.png');
         }
         .button {
-            width: 80px;
-            height: 80px;
-            font-size: 24px;
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
             font-weight: bold;
             border: none;
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
-        }
-        .reef-button {
             background-color: #6200ea;
-            color: white;
-        }
-        .level-button {
-            background-color: #ff5722;
             color: white;
         }
         .button:hover {
             transform: scale(1.1);
             opacity: 0.8;
         }
+            
+        .A { top: 140px; left: 10px; }
+        .B { top: 210px; left: 10px; }
+        .C { top: 290px; left: 65px; }
+        .D { top: 335px; left: 130px; }
+        .E { top: 335px; left: 215px; }
+        .F { top: 290px; left: 280px; }
+        .G { top: 210px; left: 330px; }
+        .H { top: 140px; left: 330px; }
+        .I { top: 60px; left: 280px; }
+        .J { top: 20px; left: 215px; }
+        .K { top: 20px; left: 130px; }
+        .L { top: 60px; left: 65px; }
     </style>
 </head>
 <body>
     <h1>Reefscape Interface</h1>
-    <h2>Select a Reef Position</h2>
-    <div class="reef-container">
-        <button class="button reef-button" onclick="selectReef('A')">A</button>
-        <button class="button reef-button" onclick="selectReef('B')">B</button>
-        <button class="button reef-button" onclick="selectReef('C')">C</button>
-        <button class="button reef-button" onclick="selectReef('D')">D</button>
-        <button class="button reef-button" onclick="selectReef('E')">E</button>
-        <button class="button reef-button" onclick="selectReef('F')">F</button>
-        <button class="button reef-button" onclick="selectReef('G')">G</button>
-        <button class="button reef-button" onclick="selectReef('H')">H</button>
-        <button class="button reef-button" onclick="selectReef('I')">I</button>
-        <button class="button reef-button" onclick="selectReef('J')">J</button>
-        <button class="button reef-button" onclick="selectReef('K')">K</button>
-        <button class="button reef-button" onclick="selectReef('L')">L</button>
-    </div>
-    <h2>Select a Scoring Level</h2>
-    <div class="levels-container">
-        <button class="button level-button" onclick="selectLevel('L1')">L1</button>
-        <button class="button level-button" onclick="selectLevel('L2')">L2</button>
-        <button class="button level-button" onclick="selectLevel('L3')">L3</button>
-        <button class="button level-button" onclick="selectLevel('L4')">L4</button>
+    <div class="interface">
+        <div id="reef-position" class="reef-container">
+            <div class="hex-border"></div>
+            <button class="button A" onclick="selectReef('A')">A</button>
+            <button class="button B" onclick="selectReef('B')">B</button>
+            <button class="button C" onclick="selectReef('C')">C</button>
+            <button class="button D" onclick="selectReef('D')">D</button>
+            <button class="button E" onclick="selectReef('E')">E</button>
+            <button class="button F" onclick="selectReef('F')">F</button>
+            <button class="button G" onclick="selectReef('G')">G</button>
+            <button class="button H" onclick="selectReef('H')">H</button>
+            <button class="button I" onclick="selectReef('I')">I</button>
+            <button class="button J" onclick="selectReef('J')">J</button>
+            <button class="button K" onclick="selectReef('K')">K</button>
+            <button class="button L" onclick="selectReef('L')">L</button>
+        </div>
+
+        <div id="reef-scoring" class="reef-container"></div>
     </div>
     <script>
         function selectReef(position) {
             alert('Reef position ' + position + ' selected!');
-        }
-        function selectLevel(level) {
-            alert('Scoring level ' + level + ' selected!');
         }
     </script>
 </body>
