@@ -1,3 +1,4 @@
+/*
 body {
     font-family: Arial, sans-serif;
     text-align: center;
@@ -35,7 +36,6 @@ h1 {
     background-image: url('images/reef.png');
 }
 #reef-pipe {
-    /*background-color: #6200ea;*/
     background-image: url('images/reef-pipe.png');
 }
 
@@ -81,3 +81,99 @@ h1 {
 #L3 { top: 125px; left:-25px; }
 #L2 { top: 215px; left:-25px; }
 #L1 { top: 300px; left:-25px; }
+
+*/
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-image: url('images/background.png');
+    align-content: center;
+}
+h1 {
+    color: azure;
+    font-style: italic;
+}
+.interface {
+    padding-top: 10%;
+    font-size: 0;
+    align-content: center;
+}
+.reef-container {
+    position: relative;
+    align-self: flex-start;
+    width: 50%;
+    height: 50vw;
+    max-width: 500px;
+    max-height: 500px;
+    margin: 2% auto;
+    background: url('reef_hexagon.png') no-repeat center;
+    background-size: contain;
+    display: inline-block;
+}  
+.reef-container img {
+    height: 100%;
+    width: 50%;
+}
+
+#reef-pipe {
+    position: relative;
+    width: 25%;
+    height: 50vw;
+    max-width: 250px;
+    max-height: 500px;
+    margin: 2% auto;
+    margin-left: 15%;
+    background-size: contain;
+    display: inline-block;
+}
+#img-pipe {
+    margin-right: 5%;
+}
+#reef-position {
+    background-image: url('images/reef.png');
+}
+
+.button {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    max-width: 50px;
+    max-height: 50px;
+    font-size: 2vw;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.reef-button {
+    background-color: #a1a4a1;
+    color: white;
+}
+.level-button {
+    background-color: #a1a4a1;
+    color: white;
+}
+.button:hover {
+    transform: scale(1.1);
+    opacity: 0.8;
+}
+
+#A { top: 37.5%; left: 5%; }
+#B { top: 54.5%; left: 5%; }
+#C { top: 72%; left: 16%; }
+#D { top: 83%; left: 32%; }
+#E { top: 83%; left: 55%; }
+#F { top: 72%; left: 72%; }
+#G { top: 54.5%; left: 82.5%; }
+#H { top: 37.5%; left: 82.5%; }
+#I { top: 17%; left: 72%; }
+#J { top: 7%; left: 55%; }
+#K { top: 7%; left: 32%; }
+#L { top: 17%; left: 16%; }
+
+#L4 { top: 8%; left: 50%; }
+#L3 { top: 35%; left: 50%; }
+#L2 { top: 57%; left: 50%; }
+#L1 { top: 80%; left: 50%; }
