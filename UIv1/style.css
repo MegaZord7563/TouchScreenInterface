@@ -2,6 +2,7 @@ body {
     font-family: Arial, sans-serif;
     text-align: center;
     background-image: url('images/background.png');
+    align-content: center;
 }
 h1 {
     color: azure;
@@ -9,6 +10,7 @@ h1 {
 }
 .interface {
     font-size: 0;
+    align-content: center;
 }
 .reef-container {
     position: relative;
