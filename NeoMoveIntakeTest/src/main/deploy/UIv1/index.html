@@ -1,3 +1,4 @@
+<!---->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +8,35 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- This starts the NetworkTables websocket, it can be accessed from multiple
+     pages simultaneously -->
+    <script src="/networktables/networktables.js"></script>
+
+    <!-- Obviously, you will want to copy this file locally in a real 
+         dashboard, as the Driver Station won't have internet access -->
+    <script src="https://code.jquery.com/jquery-2.2.2.min.js"></script>
+
+    <!-- uncomment this is you want to use included utility functions that
+         implement common functionality that you might find useful. Requires
+         that d3.js and jQuery are included first -->
+    <!-- <script src="/networktables/utils.js"></script> -->
+
+    <div>
+    	NetworkTables websocket: <span id="connectstate">Unknown state</span><br/>
+    	Robot: <span id="robotstate">Unknown state</span> @ <span id="robotAddress">disconnected</span>
+        btnValue: <span id="btnTest">Unknown</span>
+    </div>
+    <hr/>
+
+    <!--
+    <table id="nt" border=1>
+    	<tbody></tbody>
+    </table>
+    -->
+
+    <!---->   
     <!--<h1>Reefscape Interface</h1>-->
+<!---->
     <div class="interface">
         <div id="reef-position" class="reef-container">
             <button id="A" class="button reef-button" onclick="selectReef('A')">A</button>
@@ -35,8 +64,72 @@
         </div>
 
     </div>
-    <!--src="/networktables/networktables.js"-->
-    <script>
+
+    <script type="text/javascript">
+    "use strict";
+
+
+    $(document).ready(function(){
+
+// sets a function that will be called when the websocket connects/disconnects
+NetworkTables.addWsConnectionListener(onNetworkTablesConnection, true);
+
+// sets a function that will be called when the robot connects/disconnects
+NetworkTables.addRobotConnectionListener(onRobotConnection, true);
+
+// sets a function that will be called when any NetworkTables key/value changes
+//NetworkTables.addGlobalListener(onValueChanged, true);
+
+NetworkTables.addKeyListener('/SmartDashboard/btnValue', function(key, value, isNew){
+// do something with the values as they change
+$('#btnTest').text(value?"ligado" : "desligado");
+}, true);
+});
+
+
+function onRobotConnection(connected) {
+$('#robotstate').text(connected ? "Connected!" : "Disconnected");
+$('#robotAddress').text(connected ? NetworkTables.getRobotAddress() : "disconnected");
+}
+
+function onNetworkTablesConnection(connected) {
+
+if (connected) {
+    $("#connectstate").text("Connected!");
+    
+    // clear the table
+    //$("#nt tbody > tr").remove();
+    
+} else {
+    $("#connectstate").text("Disconnected!");
+}
+}
+
+
+/*
+function onValueChanged(key, value, isNew) {
+
+// key thing here: we're using the various NetworkTable keys as
+// the id of the elements that we're appending, for simplicity. However,
+// the key names aren't always valid HTML identifiers, so we use
+// the NetworkTables.keyToId() function to convert them appropriately
+
+if (isNew) {
+    var tr = $('<tr></tr>').appendTo($('#nt > tbody:last'));
+    $('<td></td>').text(key).appendTo(tr);
+    $('<td></td>').attr('id', NetworkTables.keyToId(key))
+                   .text(value)
+                   .appendTo(tr);
+} else {
+
+    // similarly, use keySelector to convert the key to a valid jQuery
+    // selector. This should work for class names also, not just for ids
+    $('#' + NetworkTables.keySelector(key)).text(value);
+}
+}
+//*/
+
+
         let previousButtonReef = null;
         let buttonClickedReef = false;
         let previousButtonLevel = null;
@@ -49,6 +142,7 @@
             if(previousButtonReef != null){
                 previousButtonReef.style.backgroundColor = gray;
             }
+            NetworkTables.putValue('/SmartDashboard/btnValue',true);
             const button = document.getElementById(position);
             button.style.backgroundColor = purple;
             previousButtonReef = button;
@@ -69,7 +163,7 @@
         document.addEventListener('click', function(event) {
                 if (buttonClickedReef && !event.target.classList.contains('level-button') && !event.target.classList.contains('reef-button')) {
                     //alert(previousButtonReef.style.backgroundColor);
-                    
+                    NetworkTables.putValue('/SmartDashboard/btnValue',false);
                     //*
                     if(previousButtonReef.style.backgroundColor == "rgb(98, 0, 234)"){
                         previousButtonReef.style.backgroundColor = gray;
@@ -93,16 +187,9 @@
 
                 }
             });
-/*
-            NetworkTables.addWsConnectionListener(function(connected){
-                console.log("Websocket connected: " + connected);
-            }, true);
-            NetworkTables.addRobotConnectionListener(function(connected){
-                console.log("Robot connected: " + connected);
-            }, true);
-//*/
 
     </script>
 </body>
 </html>
+<!---->
 

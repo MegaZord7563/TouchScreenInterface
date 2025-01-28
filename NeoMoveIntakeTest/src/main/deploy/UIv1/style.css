@@ -3,6 +3,7 @@ body {
     text-align: center;
     background-image: url('images/background.png');
     align-content: center;
+    color: azure;
 }
 h1 {
     color: azure;
