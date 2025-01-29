@@ -37,13 +37,16 @@ public class Robot extends TimedRobot {
 
   SparkMaxConfig config = new SparkMaxConfig();
 
-   NetworkTableInstance inst = NetworkTableInstance.getDefault();
+  NetworkTableInstance inst = NetworkTableInstance.getDefault();
   BooleanTopic booleanTopic = new BooleanTopic(inst.getBooleanTopic("btnTest"));
   //BooleanPublisher bPublisher;
   boolean btnValue = false;
   BooleanSubscriber bSubscriber;
   BooleanEntry bEntry;
   NetworkButton testButton;
+
+
+  boolean enableInterface = false;
 
       /**
    * This function is run when the robot is first started up and should be used for any
@@ -59,6 +62,7 @@ public class Robot extends TimedRobot {
     bSubscriber = bEntry.getTopic().subscribeEx("boolean",btnValue);
     testButton = new NetworkButton(bSubscriber);
     SmartDashboard.putBoolean("btnValue", btnValue);
+    SmartDashboard.putBoolean("enableInterface", enableInterface);
   }
 
   @Override
@@ -67,6 +71,7 @@ public class Robot extends TimedRobot {
     bSubscriber.get(btnValue);
     bEntry.get(btnValue);
     bEntry.set(btnValue);
+    enableInterface = SmartDashboard.getBoolean("enableInterface", enableInterface);
   }
 
   @Override

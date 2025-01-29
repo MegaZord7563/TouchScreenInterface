@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reefscape Touchscreen Interface</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="/src/main/deploy/UIv1/images/Logos-Mega/default-png.ico" />
 </head>
 <body>
     <!-- This starts the NetworkTables websocket, it can be accessed from multiple
@@ -16,16 +17,45 @@
          dashboard, as the Driver Station won't have internet access -->
     <script src="https://code.jquery.com/jquery-2.2.2.min.js"></script>
 
+    <!--<script src="index.js" type="module"></script>-->
+
     <!-- uncomment this is you want to use included utility functions that
          implement common functionality that you might find useful. Requires
          that d3.js and jQuery are included first -->
     <!-- <script src="/networktables/utils.js"></script> -->
 
-    <div>
-    	NetworkTables websocket: <span id="connectstate">Unknown state</span><br/>
-    	Robot: <span id="robotstate">Unknown state</span> @ <span id="robotAddress">disconnected</span>
-        btnValue: <span id="btnTest">Unknown</span>
+    
+    <div class="connect">
+        <div id="team-status" class="status">
+            <div id="logo-container">
+                <img id="logo" src="images/Logos-Mega/gray-purple.png" alt="logo">
+            </div>
+            <div id="text-status">
+                <h1 id="connectstate">NetworkTables websocket: Unknown state</h1></br>
+                <h1 id="robotstate">Robot: Unknown state @</h1><h1 id="robotAddress">disconnected</h1>
+            </div>
+            <label id="robot-status" class="checkBox">
+                <input id="ch1" type="checkbox">
+                <div id="trans1" class="transition"></div>
+            </label>
+        </div>
+        <div id="button-status" class="status">
+            <div id="bb1" class="button-borders">
+                <button id="pb1" class="primary-button"> UNKNOWN ALLIANCE
+                </button>
+            </div>
+            <div id="bb2" class="button-borders">
+                <button id="pb2" class="primary-button"> INTERFACE DISCONECTED
+                </button>
+            </div>
+        </div>
     </div>
+    <!--
+        <label class="checkBox">
+            <input id="ch1" type="checkbox">
+            <div class="transition"></div>
+        </label>
+    -->
     <hr/>
 
     <!--
@@ -64,7 +94,7 @@
         </div>
 
     </div>
-
+<!---->
     <script type="text/javascript">
     "use strict";
 
@@ -82,26 +112,94 @@ NetworkTables.addRobotConnectionListener(onRobotConnection, true);
 
 NetworkTables.addKeyListener('/SmartDashboard/btnValue', function(key, value, isNew){
 // do something with the values as they change
-$('#btnTest').text(value?"ligado" : "desligado");
+//$('#btnTest').text(value?"ligado" : "desligado");
+
+
 }, true);
+
+NetworkTables.addKeyListener('/FMSInfo/IsRedAlliance', function(key, value, isNew){
+// do something with the values as they change
+//*
+const alliance = document.getElementById("pb1");
+$(alliance).text(value?"RED ALLIANCE" : "BLUE ALLIANCE");
+if(value){
+            alliance.style.border = "1px solid #FF4655";
+            alliance.style.color = "white";
+            alliance.style.backgroundColor   = "#FF4655";
+            alliance.style.backgroundPosition = "40%";
+}else{
+            alliance.style.border = "1px solid #3F51B5";
+            alliance.style.color = "white"; 
+            alliance.style.backgroundColor = "#3F51B5";
+            alliance.style.backgroundPosition = "40%";
+}
+            //*/
+}, true);
+//*
+NetworkTables.addKeyListener('/SmartDashboard/enableInterface', function(key, value, isNew){
+// do something with the values as they change
+    //alert(value);    
+    //const interface = document.getElementById("pb2");
+    $('#pb2').text(value?"INTERFACE ENABLED" : "INTERFACE DISABLED");
+    //*
+    if(value){
+            $('#pb2').css('border', '1px solid #4CAF50'); 
+            $('#pb2').css('color', 'white'); 
+            $('#pb2').css('background-color', '#4CAF50'); 
+            $('#pb2').css('background-position', '40%');    
+    }else{
+            $('#pb2').css('border', '1px solid #FF4655'); 
+            $('#pb2').css('color', 'white'); 
+            $('#pb2').css('background-color', '#FF4655'); 
+            $('#pb2').css('background-position', '40%');    
+    }
+/*
+    const interface = document.getElementById("pb2")    ;
+    $(interface).text(value?"INTERFACE ENABLED" : "INTERFACE DISABLED");
+    if(value){
+            interface.style.border = "1px solid #4CAF50";
+            interface.style.color = "white"; 
+            interface.style.backgroundColor = "#4CAF50";
+            interface.style.backgroundPosition = "40%";
+    }else{
+            interface.style.border = "1px solid #FF4655";
+            interface.style.color = "white";
+            interface.style.backgroundColor   = "#FF4655";
+            interface.style.backgroundPosition = "40%";
+    }
+    //*/
+}, true);
+
+//*/
+
+//const interface = document.getElementById("interface-btn");
+//$(interface).text(NetworkTables.getValue('/SmartDashboard/enableInterface',false)?"INTERFACE ENABLED" : "INTERFACE DISABLED");
 });
 
 
 function onRobotConnection(connected) {
-$('#robotstate').text(connected ? "Connected!" : "Disconnected");
+$('#robotstate').text(connected ? "Robot: Connected! @" : "Robot: Disconnected @");
 $('#robotAddress').text(connected ? NetworkTables.getRobotAddress() : "disconnected");
+
+if(!connected){
+    $('#trans1').css('background-color', 'red');
+    $('#ch1').click();
+}else{
+    $('#trans1').css('background-color', '#4CAF50');
+}
+
 }
 
 function onNetworkTablesConnection(connected) {
 
 if (connected) {
-    $("#connectstate").text("Connected!");
+    $("#connectstate").text("NetworkTables websocket: Connected!");
     
     // clear the table
     //$("#nt tbody > tr").remove();
     
 } else {
-    $("#connectstate").text("Disconnected!");
+    $("#connectstate").text("NetworkTables websocket: Disconnected!");
 }
 }
 
@@ -147,7 +245,6 @@ if (isNew) {
             button.style.backgroundColor = purple;
             previousButtonReef = button;
             buttonClickedReef = true;
-
         }
 
         function selectLevel(level) {
@@ -189,6 +286,7 @@ if (isNew) {
             });
 
     </script>
+<!---->
 </body>
 </html>
 <!---->
