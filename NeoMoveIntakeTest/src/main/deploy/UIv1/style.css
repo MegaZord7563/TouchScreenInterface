@@ -15,9 +15,9 @@ body {
     position: relative;
     align-self: flex-start;
     width: 50%;
-    height: 50vw;
-    max-width: 600px;
-    max-height: 550px;
+    height: 43vw; /*50vw;*/
+    max-width: 550px;
+    max-height: 500px;
     margin: 2% auto;
     background: url('reef_hexagon.png') no-repeat center;
     background-size: contain;
@@ -31,7 +31,7 @@ body {
 #reef-pipe {
     position: relative;
     width: 25%;
-    height: 50vw;
+    height: 43vw; /*50vw;*/
     max-width: 250px;
     max-height: 500px;
     margin: 2% auto;
@@ -72,15 +72,15 @@ body {
     opacity: 0.8;
 }
 
-/*
-#A { top: 37.5%; left: 5%; }
-#B { top: 54.5%; left: 5%; }
+
+#A { top: 36.5%; left: 5%; }
+#B { top: 53.5%; left: 5%; }
 #C { top: 72%; left: 16%; }
 #D { top: 83%; left: 32%; }
 #E { top: 83%; left: 55%; }
 #F { top: 72%; left: 72%; }
-#G { top: 54.5%; left: 82.5%; }
-#H { top: 37.5%; left: 82.5%; }
+#G { top: 53.5%; left: 82.5%; }
+#H { top: 36.5%; left: 82.5%; }
 #I { top: 17%; left: 72%; }
 #J { top: 7%; left: 55%; }
 #K { top: 7%; left: 32%; }
@@ -90,8 +90,9 @@ body {
 #L3 { top: 35%; left: 50%; }
 #L2 { top: 57%; left: 50%; }
 #L1 { top: 80%; left: 50%; }
-*/
 
+
+/*
 #A { top: 37.5%; left: 10%; }
 #B { top: 54.5%; left: 10%; }
 #C { top: 72%; left: 18%; }
@@ -109,7 +110,7 @@ body {
 #L3 { top: 32%; left: 50%; }
 #L2 { top: 55%; left: 50%; }
 #L1 { top: 80%; left: 50%; }
-
+*/
 .checkBox {
     display: block;
     cursor: pointer;
@@ -149,7 +150,7 @@ body {
   }
 
   #robot-status{
-    left: 5%;
+    left: 20%;
   }
 
   .primary-button {
@@ -157,14 +158,14 @@ body {
        /* font-family: 'Valorant', sans-serif; */
     color: white;
     cursor: pointer;
-    font-size: 13px;
+    font-size: 11px;
     font-weight: bold;
     letter-spacing: 0.05rem;
     border: 1px solid #0E1822;
-    padding: 0.8rem 2.1rem;
+    padding: 0.8rem 0.8rem;
     background-color: #0E1822;
-    background-size: 200%;
-    background-position: 200%;
+    background-size: 150%;
+    background-position: 150%;
     transition: 0.3s ease-in-out;
     transition-property: background-position, border, color;
     position: relative;
@@ -288,13 +289,14 @@ body {
     display: inline-flexbox;
     align-self: center;
     float: left;
+    left: 15%;
     bottom: 25%;
 }
 
 h1 {
     position: relative;
     color: azure;
-    font-size: 18px;
+    font-size: 15px;
     text-align: left;
     margin: 0;
     margin-bottom: 0.3rem;
@@ -305,8 +307,8 @@ h1 {
 
 .status img {
     position: relative;
-    max-height:350%; 
-    max-width: 350%;
+    max-height:290%; 
+    max-width: 290%;
 }
 #logo-container {
     position: relative;

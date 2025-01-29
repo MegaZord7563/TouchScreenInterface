@@ -62,6 +62,7 @@ public class Robot extends TimedRobot {
     bSubscriber = bEntry.getTopic().subscribeEx("boolean",btnValue);
     testButton = new NetworkButton(bSubscriber);
     SmartDashboard.putBoolean("btnValue", btnValue);
+    enableInterface = true;
     SmartDashboard.putBoolean("enableInterface", enableInterface);
   }
 

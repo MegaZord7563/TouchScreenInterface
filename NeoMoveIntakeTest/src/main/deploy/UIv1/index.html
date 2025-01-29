@@ -31,8 +31,8 @@
                 <img id="logo" src="images/Logos-Mega/gray-purple.png" alt="logo">
             </div>
             <div id="text-status">
-                <h1 id="connectstate">NetworkTables websocket: Unknown state</h1></br>
-                <h1 id="robotstate">Robot: Unknown state @</h1><h1 id="robotAddress">disconnected</h1>
+                <h1 id="connectstate">NetworkTables: Unknown state</h1></br>
+                <h1 id="robotstate">Robot: Unknown state #</h1><h1 id="robotAddress">Off</h1>
             </div>
             <label id="robot-status" class="checkBox">
                 <input id="ch1" type="checkbox">
@@ -121,17 +121,20 @@ NetworkTables.addKeyListener('/FMSInfo/IsRedAlliance', function(key, value, isNe
 // do something with the values as they change
 //*
 const alliance = document.getElementById("pb1");
+const image = document.getElementById('reef-position');
 $(alliance).text(value?"RED ALLIANCE" : "BLUE ALLIANCE");
 if(value){
             alliance.style.border = "1px solid #FF4655";
             alliance.style.color = "white";
             alliance.style.backgroundColor   = "#FF4655";
             alliance.style.backgroundPosition = "40%";
+            image.style.backgroundImage = "url('images/reef-red.png')";
 }else{
             alliance.style.border = "1px solid #3F51B5";
             alliance.style.color = "white"; 
             alliance.style.backgroundColor = "#3F51B5";
             alliance.style.backgroundPosition = "40%";
+            image.style.backgroundImage = "url('images/reef.png')";
 }
             //*/
 }, true);
@@ -178,8 +181,9 @@ NetworkTables.addKeyListener('/SmartDashboard/enableInterface', function(key, va
 
 
 function onRobotConnection(connected) {
-$('#robotstate').text(connected ? "Robot: Connected! @" : "Robot: Disconnected @");
-$('#robotAddress').text(connected ? NetworkTables.getRobotAddress() : "disconnected");
+
+$('#robotstate').text(connected ? "Robot: Connected! #" : "Robot: Disconnected #");
+$('#robotAddress').text(connected ? NetworkTables.getRobotAddress().substring(8,12) : "Off");
 
 if(!connected){
     $('#trans1').css('background-color', 'red');
@@ -193,13 +197,13 @@ if(!connected){
 function onNetworkTablesConnection(connected) {
 
 if (connected) {
-    $("#connectstate").text("NetworkTables websocket: Connected!");
+    $("#connectstate").text("NetworkTables: Connected!");
     
     // clear the table
     //$("#nt tbody > tr").remove();
     
 } else {
-    $("#connectstate").text("NetworkTables websocket: Disconnected!");
+    $("#connectstate").text("NetworkTables: Disconnected!");
 }
 }
 
