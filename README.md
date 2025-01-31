@@ -42,15 +42,13 @@ A cross-platform library that forwards NetworkTables key/values over a WebSocket
 
 This library does not provide a full dashboard solution but is intended to provide the necessary plumbing for creating one with only knowledge of HTML/JavaScript. Because the communications layer uses NetworkTables, you can connect to all FRC languages (C++, Java, LabVIEW, Python).
 
-Note
+Note: NetworkTables is a protocol used for robot communication in the FIRST Robotics Competition and can be used to talk to Shuffleboard/SmartDashboard. It does not have any security, and should never be used on untrusted networks.
 
-NetworkTables is a protocol used for robot communication in the FIRST Robotics Competition and can be used to talk to Shuffleboard/SmartDashboard. It does not have any security, and should never be used on untrusted networks.
-
-### Documentation
+## Documentation
 
 Documentation can be found at http://pynetworktables2js.readthedocs.org/
 
-### Installation
+## Installation
 
 To install the `pynetworktables2js`, follow the instructions at https://github.com/robotpy/pynetworktables2js/tree/main.
 
@@ -70,7 +68,185 @@ cd "C:\Users\my-folder-path\src\main\deploy\UIv1"
 ./pynetworktables2js.exe
 ```
 
-**3. To run in the FRC-roborio through FRC Driver Station:**
+---
+
+## Implementing in the code
+
+Similar to the XboxController class, the **Interface** has its own easy-to-control subsystem class: the `TouchScreenInterface.java`. That way, to implement the **Interface** in the robot code it is only necessary to copy the `TouchScreenInterface.java` class in the Subsystems directory.
+
+```java
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package frc.robot;
+
+import edu.wpi.first.networktables.BooleanEntry;
+import edu.wpi.first.networktables.BooleanTopic;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.NetworkButton;
+
+public class TouchScreenInterface extends SubsystemBase {
+
+
+  public enum Button {
+    /** A button. */
+    kA("A"),
+    /** B button. */
+    kB("B"),
+    /** C button. */
+    kC("C"),
+    /** D button. */
+    kD("D"),
+    /** E button. */
+    kE("E"),
+    /** F button. */
+    kF("F"),
+    /** G button. */
+    kG("G"),
+    /** H button. */
+    kH("H"),
+    /** I button. */
+    kI("I"),
+    /** J button. */
+    kJ("J"),
+    /** K button. */
+    kK("K"),
+    /** L button. */
+    kL("L"),
+    /** L button. */
+    kL1("L1"),
+    /** L button. */
+    kL2("L2"),
+    /** L button. */
+    kL3("L3"),
+    /** L button. */
+    kL4("L4");
+
+    public final String value;
+
+    Button(String value) {
+      this.value = value;
+    }
+
+    /**
+     * Get the human-friendly name of the button, matching the relevant methods. This is done by
+     * stripping the leading `k`, and appending `Button`.
+     *
+     * <p>Primarily used for automated unit tests.
+     *
+     * @return the human-friendly name of the button.
+     */
+    @Override
+    public String toString() {
+      // Remove leading `k`
+      return this.name().substring(1) + "Button";
+    }
+  }
+
+  // Instance NetworkTables and Entries 
+
+  NetworkTableInstance inst = NetworkTableInstance.getDefault();
+  BooleanTopic booleanTopic[] = new BooleanTopic[16];
+  boolean[] btnValue = new boolean[16];
+  BooleanEntry[] bEntry = new BooleanEntry[16];
+  NetworkButton[] networkButtons = new NetworkButton[16];
+
+  boolean enableInterface = false;
+
+
+  /** Creates a new TouchScreenInterface. */
+  public TouchScreenInterface() {
+    for (Button button : Button.values()) {
+      // Create a new boolean topic for each button
+      booleanTopic[button.ordinal()] = new BooleanTopic(inst.getBooleanTopic(button.toString()));
+      // Set the default value of the button to false
+      btnValue[button.ordinal()] = false;
+      // Create a new boolean entry for each button
+      bEntry[button.ordinal()] = booleanTopic[button.ordinal()].getEntryEx("boolean", btnValue[button.ordinal()]);
+      // Create a new network button for each button
+      networkButtons[button.ordinal()] = new NetworkButton(bEntry[button.ordinal()].getTopic()
+                                              .subscribeEx("boolean", btnValue[button.ordinal()]));
+      // Set the default value of the button to false and put it on the SmartDashboard
+      SmartDashboard.putBoolean(button.toString()+"Value", btnValue[button.ordinal()]);
+    }
+    // Put the enableInterface boolean on the SmartDashboard
+    SmartDashboard.putBoolean("enableInterface", enableInterface);
+  }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+
+    // Get the value of the enableInterface boolean from the SmartDashboard
+    enableInterface = SmartDashboard.putBoolean("enableInterface", isInterfaceEnabled());
+    for (Button button : Button.values()) {
+      // Get the value of the button from the SmartDashboard
+      btnValue[button.ordinal()] = SmartDashboard.getBoolean(button.toString()+"Value", btnValue[button.ordinal()]);
+      // Set the value of the button to the value from the SmartDashboard
+      bEntry[button.ordinal()].get(btnValue[button.ordinal()]);
+      bEntry[button.ordinal()].set(btnValue[button.ordinal()]);
+    }
+
+  }
+
+  // Get the boolean value of the button
+  public boolean getButtonValue(Button button) {
+    return networkButtons[button.ordinal()].getAsBoolean();
+  }
+
+  // Get the NetworkButton object of the button
+  public NetworkButton getButton(Button button) {
+    return networkButtons[button.ordinal()];
+  }
+
+  // Enable or disable the interface
+  public void enableInterface() {
+    enableInterface = true;
+  }
+
+  // Enable or disable the interface
+  public void disableInterface() {
+    enableInterface = false;
+  }
+
+  // Get the value of the enableInterface boolean
+  public boolean isInterfaceEnabled() {
+    return enableInterface;
+  }
+
+}
 ```
-./pynetworktables2js.exe --robot roborio-XXXX-frc.local
+
+## Optimizing the NetworkTables 
+
+By default, the `TouchScreenInterface.java` instantiates sixteen NetworkButton; however, if the network is overloaded, there is an option to comment those buttons and only use the boolean values. To do so, comment the following lines:
+
+```java
+[...]
+
+-->     // Create a new boolean topic for each button
+-->    booleanTopic[button.ordinal()] = new BooleanTopic(inst.getBooleanTopic(button.toString()));
+
+[...]
+
+-->     // Create a new boolean entry for each button
+-->     bEntry[button.ordinal()] = booleanTopic[button.ordinal()].getEntryEx("boolean", btnValue[button.ordinal()]);
+-->     // Create a new network button for each button
+-->     networkButtons[button.ordinal()] = new NetworkButton(bEntry[button.ordinal()].getTopic()
+                                              .subscribeEx("boolean", btnValue[button.ordinal()]));
+[...]
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+
+    for (Button button : Button.values()) {
+-->      // Set the value of the button to the value from the SmartDashboard
+-->      bEntry[button.ordinal()].get(btnValue[button.ordinal()]);
+-->      bEntry[button.ordinal()].set(btnValue[button.ordinal()]);
+    }
+
+[...]
 ```
