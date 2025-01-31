@@ -4,15 +4,9 @@
 
 package frc.robot;
 
-import edu.wpi.first.networktables.BooleanEntry;
-import edu.wpi.first.networktables.BooleanSubscriber;
-import edu.wpi.first.networktables.BooleanTopic;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.NetworkButton;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
@@ -37,16 +31,7 @@ public class Robot extends TimedRobot {
 
   SparkMaxConfig config = new SparkMaxConfig();
 
-  NetworkTableInstance inst = NetworkTableInstance.getDefault();
-  BooleanTopic booleanTopic = new BooleanTopic(inst.getBooleanTopic("btnTest"));
-  //BooleanPublisher bPublisher;
-  boolean btnValue = false;
-  BooleanSubscriber bSubscriber;
-  BooleanEntry bEntry;
-  NetworkButton testButton;
-
-
-  boolean enableInterface = false;
+  TouchScreenInterface touchScreenInterface = new TouchScreenInterface();
 
       /**
    * This function is run when the robot is first started up and should be used for any
@@ -56,23 +41,12 @@ public class Robot extends TimedRobot {
     config
     .idleMode(IdleMode.kBrake)
     .smartCurrentLimit(20);
-
-    bEntry = booleanTopic.getEntryEx("boolean", btnValue);
-    //bPublisher = booleanTopic.publish();
-    bSubscriber = bEntry.getTopic().subscribeEx("boolean",btnValue);
-    testButton = new NetworkButton(bSubscriber);
-    SmartDashboard.putBoolean("btnValue", btnValue);
-    enableInterface = true;
-    SmartDashboard.putBoolean("enableInterface", enableInterface);
+    touchScreenInterface.enableInterface();
   }
 
   @Override
   public void robotPeriodic() {
-    btnValue = SmartDashboard.getBoolean("btnValue", btnValue);
-    bSubscriber.get(btnValue);
-    bEntry.get(btnValue);
-    bEntry.set(btnValue);
-    enableInterface = SmartDashboard.getBoolean("enableInterface", enableInterface);
+    touchScreenInterface.periodic();
   }
 
   @Override
@@ -87,19 +61,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    if (testButton.getAsBoolean()) {
-      neoIntake.set(0.15);
-    }    
-/*
-    else if (driverJoystick.getHID().getBButton()) {
-      neoIntake.set(-0.15);
-    }  
-//*/ 
-    else{
-      neoIntake.set(0 );
-    }
-
-    
+    touchScreenInterface.getButton(TouchScreenInterface.Button.kA).onTrue(new InstantCommand(() -> neoIntake.set(0.15)));
+    touchScreenInterface.getButton(TouchScreenInterface.Button.kA).onFalse(new InstantCommand(() -> neoIntake.set(0)));   
 
   }
   

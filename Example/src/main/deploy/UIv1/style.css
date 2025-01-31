@@ -7,7 +7,6 @@ body {
 }
 
 .interface {
-    /*padding-top: 10%;*/
     font-size: 0;
     align-content: center;
 }
@@ -15,7 +14,7 @@ body {
     position: relative;
     align-self: flex-start;
     width: 50%;
-    height: 43vw; /*50vw;*/
+    height: 43vw; 
     max-width: 550px;
     max-height: 500px;
     margin: 2% auto;
@@ -31,7 +30,7 @@ body {
 #reef-pipe {
     position: relative;
     width: 25%;
-    height: 43vw; /*50vw;*/
+    height: 43vw; 
     max-width: 250px;
     max-height: 500px;
     margin: 2% auto;
@@ -155,7 +154,6 @@ body {
 
   .primary-button {
     font-family: 'Ropa Sans', sans-serif;
-       /* font-family: 'Valorant', sans-serif; */
     color: white;
     cursor: pointer;
     font-size: 11px;
@@ -171,13 +169,7 @@ body {
     position: relative;
     z-index: 1;
    }
-/*
-   .primary-button:hover {
-    border: 1px solid #FF4655;
-    color: white;
-    background-position: 40%;
-   }
-*/
+
    .primary-button:before {
     content: "";
     position: relative;
@@ -188,15 +180,7 @@ body {
     left: -1px;
     transition: background-color 0.15s ease-in-out;
    }
-/* 
-   .primary-button:hover:before {
-    background-color: white;
-   }
-   
-   .primary-button:hover:after {
-    background-color: white;
-   }
-*/   
+ 
    .primary-button:after {
     content: "";
     position: relative;
@@ -228,7 +212,6 @@ body {
     top: -0.3em;
     border: 1px solid #e3f0fd;
     border-bottom: 0px;
-       /* opacity: 0.3; */
    }
    
    .button-borders:after {
@@ -240,7 +223,6 @@ body {
     bottom: -0.3em;
     border: 1px solid #e3f0fd;
     border-top: 0px;
-       /* opacity: 0.3; */
     z-index: 0;
    }
    
@@ -270,8 +252,7 @@ body {
     max-height: 25px;
     margin: auto;
     right: 2%;
-    bottom: 25%;
-    
+    bottom: 25%; 
 }
 
 #team-status {
@@ -301,7 +282,6 @@ h1 {
     margin: 0;
     margin-bottom: 0.3rem;
     display: flex;
-    /*float: left*/
     float: left;
 }
 
