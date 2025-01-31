@@ -68,6 +68,11 @@ cd "C:\Users\my-folder-path\src\main\deploy\UIv1"
 ./pynetworktables2js.exe
 ```
 
+**3. To run in the FRC-roborio through FRC Driver Station (replace XXXX for your team number):**
+```
+./pynetworktables2js.exe --robot roborio-XXXX-frc.local
+```
+
 ---
 
 ## Implementing in the code
