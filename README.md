@@ -238,6 +238,7 @@ By default, the `TouchScreenInterface.java` instantiates sixteen NetworkButton; 
 -->     networkButtons[button.ordinal()] = new NetworkButton(bEntry[button.ordinal()].getTopic()
                                               .subscribeEx("boolean", btnValue[button.ordinal()]));
 [...]
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
