@@ -151,7 +151,8 @@
         }
 
         // If a Level button was previously clicked and the user clicks outside of the buttons, change its color back to gray
-        if (buttonClickedLevel && !event.target.classList.contains('level-button') && !event.target.classList.contains('reef-button')) {
+        if (buttonClickedLevel && !event.target.classList.contains('level-button') && !event.target.classList.contains('reef-button')
+                && (event.target.id === 'reef-pipe' || event.target.id === 'img-pipe')) {
             // Set the value of the button to false
             NetworkTables.putValue('/SmartDashboard/' + previousButtonLevel.id + 'ButtonValue',false);
             // Change the color of the button to gray
@@ -210,7 +211,7 @@
             alliance.style.backgroundColor = "#3F51B5";
             alliance.style.backgroundPosition = "40%";
             // Change the image to the blue reef
-            image.style.backgroundImage = "url('images/reef.png')";
+            image.style.backgroundImage = "url('images/reef-blue.png')";
         }
     }
 

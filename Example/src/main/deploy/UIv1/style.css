@@ -18,7 +18,7 @@ body {
     max-width: 550px;
     max-height: 500px;
     margin: 2% auto;
-    background: url('reef_hexagon.png') no-repeat center;
+    background: url('images/background.png') no-repeat center;
     background-size: contain;
     display: inline-block;
 }  
@@ -42,7 +42,7 @@ body {
     margin-right: 5%;
 }
 #reef-position {
-    background-image: url('images/reef.png');
+    background-image: url('images/reef-blue.png');
 }
 
 .button {
@@ -65,6 +65,8 @@ body {
 .level-button {
     background-color: #a1a4a1;
     color: white;
+    max-width: 75px;
+    max-height: 75px;
 }
 .button:hover {
     transform: scale(1.1);
@@ -72,18 +74,30 @@ body {
 }
 
 
-#A { top: 36.5%; left: 5%; }
-#B { top: 53.5%; left: 5%; }
-#C { top: 72%; left: 16%; }
-#D { top: 83%; left: 32%; }
-#E { top: 83%; left: 55%; }
-#F { top: 72%; left: 72%; }
-#G { top: 53.5%; left: 82.5%; }
-#H { top: 36.5%; left: 82.5%; }
-#I { top: 17%; left: 72%; }
-#J { top: 7%; left: 55%; }
-#K { top: 7%; left: 32%; }
-#L { top: 17%; left: 16%; }
+/*#A { top: 36.5%; left: 5%; }
+#B { top: 53.5%; left: 5%; }*/
+/*#C { top: 72%; left: 16%; }
+#D { top: 83%; left: 32%; }*/
+#A { top: 85%; left: 37%; }
+/*#E { top: 83%; left: 55%; }*/
+#B { top: 85%; left: 53%; }
+/*#F { top: 72%; left: 72%; }*/
+#C { top: 72%; left: 72%; }
+/*#G { top: 53.5%; left: 82.5%; }*/
+#D { top: 56%; left: 80%; }
+/*#H { top: 36.5%; left: 82.5%; }*/
+#E { top: 34%; left: 80%; }
+/*#I { top: 17%; left: 72%; }*/
+#F { top: 19%; left: 72%; }
+/*#J { top: 7%; left: 55%; }*/
+#G { top: 6%; left: 53%; }
+/*#K { top: 7%; left: 32%; }*/
+#H { top: 6%; left: 37%; }
+/*#L { top: 17%; left: 16%; }*/
+#I { top: 19%; left: 16%; }
+#J { top: 34%; left: 9%; }
+#K { top: 56%; left: 9%; }
+#L { top: 72%; left: 16%; }
 
 #L4 { top: 8%; left: 50%; }
 #L3 { top: 35%; left: 50%; }

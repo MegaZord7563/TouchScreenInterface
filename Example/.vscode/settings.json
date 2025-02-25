@@ -58,5 +58,6 @@
     "edu.wpi.first.math.**.struct.*",
   ],
   "python.globalModuleInstallation": true,
-  "python.terminal.executeInFileDir": true
+  "python.terminal.executeInFileDir": true,
+  "liveServer.settings.port": 5501
 }
