@@ -1,11 +1,13 @@
 
 # 2025 Megazord 7563 Operator Touch-screen Interface
 
-Welcome to the base code repository for the **2025 Megazord Operator Touch-screen Interface (FRC Team 7563)**. This documentation provides an overview of how the interface works, how to install it, how to use and integrate it with the robot code, and some example codes.
+Welcome to the base code repository for the **2025 Megazord Operator Touch-screen Interface (FRC Team 7563)**. This documentation provides an overview of how the interface works, how to install it, how to use and integrate it with the robot code, and some example codes. The project was developed by the Megazord #7563 mentor Ricardo Castilho Anunciacao during January and February 2025 and recently implemented in the 2025 competitive robot.
 
+**More information are available at GitHub:** https://github.com/MegaZord7563/TouchScreenInterface
 
+**Scoring Cycles Overview:** https://bit.ly/3Db1bJK 
 
-https://github.com/user-attachments/assets/0196e820-e6ba-48a1-985c-26b94871a3bf
+**Interface Overview:** https://github.com/user-attachments/assets/0196e820-e6ba-48a1-985c-26b94871a3bf
 
 
 
@@ -13,7 +15,7 @@ https://github.com/user-attachments/assets/0196e820-e6ba-48a1-985c-26b94871a3bf
 
 The **Interface** is designed to control auto-generated paths, optimizing routines to score corals in the Reef. While the driver only presses the score button in their joystick, the operator should pre-select the desired position to supply the score button, selecting the desired reef position (A-L) and level (L1-L4). 
 
-![image](https://github.com/user-attachments/assets/f7de2333-f88d-40c6-ad17-63a09cdee125) 
+![Reef](https://github.com/user-attachments/assets/f7de2333-f88d-40c6-ad17-63a09cdee125) 
 
 ### Interface Features
 
@@ -29,7 +31,7 @@ This part of the interface provides the operator with the connection status with
 
 This part of the interface contains the virtual buttons to configure the desired path to score the coral in the Reef, including the desired position (A-L) and level (L1-L4).
 
-![image](https://github.com/user-attachments/assets/dd7888c3-ff02-4e8b-b509-e23b2e734a95)
+![Interface Command Section](https://github.com/user-attachments/assets/dd7888c3-ff02-4e8b-b509-e23b2e734a95)
 
 
 ## Reference: pynetworktables2js library
@@ -50,7 +52,7 @@ Documentation can be found at http://pynetworktables2js.readthedocs.org/
 
 ## Installation
 
-To install the `pynetworktables2js`, follow the instructions at https://github.com/robotpy/pynetworktables2js/tree/main.
+To install the `pynetworktables2js`, follow the instructions at                                                                    https://github.com/robotpy/pynetworktables2js/tree/main.
 
 > Remember: The last Python 3 version must be previously installed on the machine. Install through https://www.python.org/downloads/
 
@@ -137,8 +139,9 @@ public class TouchScreenInterface extends SubsystemBase {
     }
 
     /**
-     * Get the human-friendly name of the button, matching the relevant methods. This is done by
-     * stripping the leading `k`, and appending `Button`.
+     * Get the human-friendly name of the button, matching the relevant methods. 
+     * This is done by stripping the leading `k`,
+     * and appending `Button`.
      *
      * <p>Primarily used for automated unit tests.
      *
@@ -166,14 +169,17 @@ public class TouchScreenInterface extends SubsystemBase {
   public TouchScreenInterface() {
     for (Button button : Button.values()) {
       // Create a new boolean topic for each button
-      booleanTopic[button.ordinal()] = new BooleanTopic(inst.getBooleanTopic(button.toString()));
+      booleanTopic[button.ordinal()] =
+        new BooleanTopic(inst.getBooleanTopic(button.toString()));
       // Set the default value of the button to false
       btnValue[button.ordinal()] = false;
       // Create a new boolean entry for each button
-      bEntry[button.ordinal()] = booleanTopic[button.ordinal()].getEntryEx("boolean", btnValue[button.ordinal()]);
+      bEntry[button.ordinal()] = 
+        booleanTopic[button.ordinal()].getEntryEx("boolean", btnValue[button.ordinal()]);
       // Create a new network button for each button
-      networkButtons[button.ordinal()] = new NetworkButton(bEntry[button.ordinal()].getTopic()
-                                              .subscribeEx("boolean", btnValue[button.ordinal()]));
+      networkButtons[button.ordinal()] = 
+        new NetworkButton(bEntry[button.ordinal()].getTopic()
+                              .subscribeEx("boolean", btnValue[button.ordinal()]));
       // Set the default value of the button to false and put it on the SmartDashboard
       SmartDashboard.putBoolean(button.toString()+"Value", btnValue[button.ordinal()]);
     }
@@ -189,7 +195,8 @@ public class TouchScreenInterface extends SubsystemBase {
     enableInterface = SmartDashboard.putBoolean("enableInterface", isInterfaceEnabled());
     for (Button button : Button.values()) {
       // Get the value of the button from the SmartDashboard
-      btnValue[button.ordinal()] = SmartDashboard.getBoolean(button.toString()+"Value", btnValue[button.ordinal()]);
+      btnValue[button.ordinal()] = 
+        SmartDashboard.getBoolean(button.toString()+"Value", btnValue[button.ordinal()]);
       // Set the value of the button to the value from the SmartDashboard
       bEntry[button.ordinal()].get(btnValue[button.ordinal()]);
       bEntry[button.ordinal()].set(btnValue[button.ordinal()]);
@@ -233,15 +240,18 @@ By default, the `TouchScreenInterface.java` instantiates sixteen NetworkButton; 
 [...]
 
 -->     // Create a new boolean topic for each button
--->    booleanTopic[button.ordinal()] = new BooleanTopic(inst.getBooleanTopic(button.toString()));
+-->     booleanTopic[button.ordinal()] = 
+          new BooleanTopic(inst.getBooleanTopic(button.toString()));
 
 [...]
 
 -->     // Create a new boolean entry for each button
--->     bEntry[button.ordinal()] = booleanTopic[button.ordinal()].getEntryEx("boolean", btnValue[button.ordinal()]);
+-->     bEntry[button.ordinal()] = 
+          booleanTopic[button.ordinal()].getEntryEx("boolean", btnValue[button.ordinal()]);
 -->     // Create a new network button for each button
--->     networkButtons[button.ordinal()] = new NetworkButton(bEntry[button.ordinal()].getTopic()
-                                              .subscribeEx("boolean", btnValue[button.ordinal()]));
+-->     networkButtons[button.ordinal()] = 
+          new NetworkButton(bEntry[button.ordinal()].getTopic()
+                              .subscribeEx("boolean", btnValue[button.ordinal()]));
 [...]
 
   @Override
