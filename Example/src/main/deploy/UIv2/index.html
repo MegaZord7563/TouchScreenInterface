@@ -1,0 +1,237 @@
+<!---->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reefscape Touchscreen Interface</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="images/Logos-Mega/default-png.ico" />
+    <script src="jquery-3.7.1.min.js"></script>
+</head>
+<body>
+    
+    <!-- Load the custom script that will be used to interact with the robot -->
+    <div class="connect">
+        <div id="team-status" class="status">
+            <div id="logo-container">
+                <img id="logo" src="images/Logos-Mega/gray-purple.png" alt="logo">
+            </div>
+            <div id="text-status">
+                <h1 id="connectstate">NetworkTables: Unknown state</h1></br>
+                <h1 id="robotstate">Robot: Unknown state #</h1><h1 id="robotAddress">Off</h1>
+            </div>
+            <label id="robot-status" class="checkBox">
+                <input id="ch1" type="checkbox">
+                <div id="trans1" class="transition"></div>
+            </label>
+        </div>
+    
+        <div id="button-status" class="status">
+            <div id="bb1" class="button-borders">
+                <button id="pb1" class="primary-button"> UNKNOWN ALLIANCE
+                </button>
+            </div>
+            <div id="bb2" class="button-borders">
+                <button id="pb2" class="primary-button"> INTERFACE DISCONECTED
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <hr/>
+
+    <div class="interface">
+        <div id="reef-position" class="reef-container">
+            <button id="A" class="button reef-button" onclick="selectReef('A')">A</button>
+            <button id="B" class="button reef-button" onclick="selectReef('B')">B</button>
+            <button id="C" class="button reef-button" onclick="selectReef('C')">C</button>
+            <button id="D" class="button reef-button" onclick="selectReef('D')">D</button>
+            <button id="E" class="button reef-button" onclick="selectReef('E')">E</button>
+            <button id="F" class="button reef-button" onclick="selectReef('F')">F</button>
+            <button id="G" class="button reef-button" onclick="selectReef('G')">G</button>
+            <button id="H" class="button reef-button" onclick="selectReef('H')">H</button>
+            <button id="I" class="button reef-button" onclick="selectReef('I')">I</button>
+            <button id="J" class="button reef-button" onclick="selectReef('J')">J</button>
+            <button id="K" class="button reef-button" onclick="selectReef('K')">K</button>
+            <button id="L" class="button reef-button" onclick="selectReef('L')">L</button>
+        </div>
+
+        <div id="reef-height" class="reef-container">
+            <div id="reef-pipe" class="reef-level">
+                <button id="L1" class="button level-button" onclick="selectLevel('L1')">L1</button>
+                <button id="L2" class="button level-button" onclick="selectLevel('L2')">L2</button>
+                <button id="L3" class="button level-button" onclick="selectLevel('L3')">L3</button>
+                <button id="L4" class="button level-button" onclick="selectLevel('L4')">L4</button>
+            </div>
+            <img src="images/reef-pipe.png" alt="reef-pipe" id="img-pipe">
+        </div>
+
+    </div>
+
+    <script type="module">
+    import { NT4_Client, NT4_TYPESTR } from "./lib/nt4/nt4.js";
+
+    // ---------- Configuração ----------
+    // Endereço do robô. Troque por URL: index.html?robot=localhost (simulação) ou ?robot=10.75.63.2
+    // O padrão é o hostname do roboRIO, que funciona na maioria dos casos.
+    const ROBOT = new URLSearchParams(location.search).get("robot") || "roborio-7563-frc.local";
+    const REEF = ["A","B","C","D","E","F","G","H","I","J","K","L","L1","L2","L3","L4"];
+
+    // Cores dos botões
+    const purple = "#6200ea";
+    const green = "#4CAF50";
+    const gray = "#a1a4a1";
+
+    // ---------- Estado ----------
+    // LOGICA para desativar botões quando clicar fora deles, para não ficar "travado" no botão selecionado
+    let previousButtonReef = null;
+    let buttonClickedReef = false;
+    let previousButtonLevel = null;
+    let buttonClickedLevel = false;
+    let lastConnected = null;   // evita repetir eventos a cada tentativa de reconexão
+
+    // ---------- Cliente NT4 ----------
+    // O client NT4 é responsável por conectar ao robô, publicar e assinar tópicos.
+    //inicializa o client NT4 com os callbacks de conexão, desconexão e recebimento de dados
+    const nt = new NT4_Client(ROBOT, () => {}, () => {}, onData, onConnect, onDisconnect);
+
+    // Tópicos que o navegador publica (um boolean por botão). O client republica sozinho ao reconectar.
+    const pubTopics = new Map();
+    for (const n of REEF) {
+        const name = "/SmartDashboard/" + n + "ButtonValue";
+        pubTopics.set(name, nt.publishNewTopic(name, NT4_TYPESTR.BOOL));
+    }
+
+    // Tópicos que o navegador lê. O client reassina sozinho ao reconectar.
+    nt.subscribePeriodic(["/FMSInfo/IsRedAlliance", "/SmartDashboard/enableInterface"], 0.05);
+
+    // ---------- Funções ----------
+
+    /**
+     * boolean - Define o valor de um tópico publicado pelo navegador. Se o tópico não existir, nada acontece.
+     * @param {string} name - Nome do tópico
+     * @param {boolean} value - Valor a ser definido
+     */
+    function putValue(name, value) {
+        const topic = pubTopics.get(name);
+        if (topic) nt.addSample(topic, nt.getServerTime_us(), value);
+    }
+
+    /**
+     * Função chamada quando há dados disponíveis em um tópico assinado.
+     * @param {Object} topic - O tópico do qual os dados foram recebidos
+     * @param {number} timestamp_us - O timestamp dos dados em microsegundos
+     * @param {any} value - O valor dos dados recebidos
+     */
+    function onData(topic, timestamp_us, value) {
+        if (topic.name === "/FMSInfo/IsRedAlliance") onAllianceConnection(value);
+        else if (topic.name === "/SmartDashboard/enableInterface") enableInterface(value);
+    }
+
+    // No NT4 a conexão WebSocket é direta com o roboRIO,
+    // então "NetworkTables conectado" e "robô conectado" são o mesmo evento.
+    function onConnect()    { setConnection(true); }
+    function onDisconnect() { setConnection(false); }
+
+    function setConnection(connected) {
+        if (connected === lastConnected) return;
+        lastConnected = connected;
+        onNetworkTablesConnection(connected);
+        onRobotConnection(connected);
+    }
+
+    // ---------- Botões ----------
+    function selectReef(position) {
+        if (previousButtonReef != null && previousButtonReef.id !== position) {
+            putValue('/SmartDashboard/' + previousButtonReef.id + 'ButtonValue', false);
+        }
+        if (previousButtonReef != null) previousButtonReef.style.backgroundColor = gray;
+        putValue('/SmartDashboard/' + position + 'ButtonValue', true);
+        const button = document.getElementById(position);
+        button.style.backgroundColor = purple;
+        previousButtonReef = button;
+        buttonClickedReef = true;
+    }
+
+    function selectLevel(level) {
+        if (previousButtonLevel != null && previousButtonLevel.id !== level) {
+            putValue('/SmartDashboard/' + previousButtonLevel.id + 'ButtonValue', false);
+        }
+        if (previousButtonLevel != null) previousButtonLevel.style.backgroundColor = gray;
+        putValue('/SmartDashboard/' + level + 'ButtonValue', true);
+        const button = document.getElementById(level);
+        button.style.backgroundColor = green;
+        previousButtonLevel = button;
+        buttonClickedLevel = true;
+    }
+
+    // Módulos ES não expõem funções globais; os onclick do HTML precisam delas em window
+    window.selectReef = selectReef;
+    window.selectLevel = selectLevel;
+
+    document.addEventListener('click', function(event) {
+        if (buttonClickedReef && !event.target.classList.contains('level-button') && !event.target.classList.contains('reef-button')) {
+            putValue('/SmartDashboard/' + previousButtonReef.id + 'ButtonValue', false);
+            if (previousButtonReef.style.backgroundColor == "rgb(98, 0, 234)") {
+                previousButtonReef.style.backgroundColor = gray;
+                buttonClickedReef = false;
+            }
+        }
+
+        if (buttonClickedLevel && !event.target.classList.contains('level-button') && !event.target.classList.contains('reef-button')
+                && (event.target.id === 'reef-pipe' || event.target.id === 'img-pipe')) {
+            putValue('/SmartDashboard/' + previousButtonLevel.id + 'ButtonValue', false);
+            if (previousButtonLevel.style.backgroundColor == "rgb(76, 175, 80)") {
+                previousButtonLevel.style.backgroundColor = gray;
+                buttonClickedLevel = false;
+            }
+        }
+    });
+
+    // ---------- Status ----------
+    function onRobotConnection(connected) {
+        $('#robotstate').text(connected ? "Robot: Connected! #" : "Robot: Disconnected #");
+        const team = ROBOT.match(/roborio-(\d+)/i);
+        $('#robotAddress').text(connected ? (team ? team[1] : ROBOT) : "Off");
+
+        if (!connected) {
+            $('#trans1').css('background-color', 'red');
+            $('#ch1').click();
+        } else {
+            $('#trans1').css('background-color', '#4CAF50');
+        }
+    }
+
+    function onNetworkTablesConnection(connected) {
+        $("#connectstate").text(connected ? "NetworkTables: Connected!" : "NetworkTables: Disconnected!");
+    }
+
+    function onAllianceConnection(value) {
+        const alliance = document.getElementById("pb1");
+        const image = document.getElementById('reef-position');
+        $(alliance).text(value ? "RED ALLIANCE" : "BLUE ALLIANCE");
+        if (value) {
+            alliance.style.border = "1px solid #FF4655";
+            alliance.style.color = "white";
+            alliance.style.backgroundColor = "#FF4655";
+            alliance.style.backgroundPosition = "40%";
+            image.style.backgroundImage = "url('images/reef-red.png')";
+        } else {
+            alliance.style.border = "1px solid #3F51B5";
+            alliance.style.color = "white";
+            alliance.style.backgroundColor = "#3F51B5";
+            alliance.style.backgroundPosition = "40%";
+            image.style.backgroundImage = "url('images/reef-blue.png')";
+        }
+    }
+
+    function enableInterface(value) {
+        $('#pb2').text(value ? "INTERFACE ENABLED" : "INTERFACE DISABLED");
+        const c = value ? '#4CAF50' : '#FF4655';
+        $('#pb2').css({'border': '1px solid ' + c, 'color': 'white', 'background-color': c, 'background-position': '40%'});
+    }
+    </script>
+
+</body>
+</html>
